@@ -1,0 +1,49 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Stored details about the user for personalized astrology",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID from Firebase Auth" },
+        "displayName": { "type": "string", "description": "User's full name" },
+        "location": { "type": "string", "description": "User's current location" },
+        "religion": { "type": "string", "description": "User's religion" },
+        "caste": { "type": "string", "description": "User's caste" },
+        "rashi": { "type": "string", "description": "User's zodiac sign (Rashi)" },
+        "birthDate": { "type": "string", "description": "YYYY-MM-DD" },
+        "birthTime": { "type": "string", "description": "HH:MM" },
+        "birthPlace": { "type": "string", "description": "City, Country" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "displayName"]
+    },
+    "Transaction": {
+      "title": "Payment Transaction",
+      "description": "UPI Transaction submission details for palmistry reading validation",
+      "type": "object",
+      "properties": {
+        "transactionId": { "type": "string", "description": "The auto-generated Firestore document ID" },
+        "userId": { "type": "string", "description": "The UID of the user who paid" },
+        "userEmail": { "type": "string", "description": "The email of the user who paid" },
+        "displayName": { "type": "string", "description": "The name of the user who paid" },
+        "utr": { "type": "string", "description": "Unique Transaction Reference number filled by the user" },
+        "amount": { "type": "number", "description": "Price paid (always 5)" },
+        "upiId": { "type": "string", "description": "Target UPI ID paid to (9162810434@ptyes)" },
+        "status": { "type": "string", "description": "Status of payment: Pending / Approved" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "utr", "amount", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Main user settings and profile data"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Collection of payment validation details for manual verification"
+    }
+  }
+}

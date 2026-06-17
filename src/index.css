@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-cinzel: "Cinzel", serif;
+  
+  --color-bg-dark: #030508;
+  --color-bg-light: #fefcf9;
+  --color-accent: #d4af37;
+  --color-accent-soft: #f3e5ab;
+  --color-void: #060913;
+  --color-dawn: #d9e2ec;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-dark text-[#f5f5f7] font-sans antialiased selection:bg-accent/30 selection:text-white overflow-x-hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif text-accent-soft font-medium tracking-wide;
+  }
+}
+
+/* Premium Celestial Glassmorphism */
+.glass {
+  @apply bg-gradient-to-b from-white/[0.04] to-white/[0.01] backdrop-blur-[32px] border border-white/[0.08] shadow-[0_24px_64px_-16px_rgba(0,0,0,0.7)] hover:border-white/[0.12] transition-colors duration-500;
+}
+
+.glass-accent {
+  @apply bg-gradient-to-b from-accent/[0.06] to-transparent backdrop-blur-[32px] border border-accent/[0.15] shadow-[0_24px_64px_-16px_rgba(212,175,55,0.08)] hover:border-accent/[0.25] transition-all duration-500;
+}
+
+.glass-light {
+  @apply bg-white/[0.06] backdrop-blur-[16px] border border-white/[0.1];
+}
+
+/* Keyframe animations for elite celestial background */
+@keyframes twinkle {
+  0%, 100% { 
+    opacity: 0.15; 
+    transform: scale(0.85); 
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.1));
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.25); 
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.8));
+  }
+}
+
+@keyframes orbit-cw {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes orbit-ccw {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+@keyframes subtle-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Astrology Class Hooks */
+.animate-twinkle {
+  animation: twinkle var(--twinkle-duration, 5s) ease-in-out infinite;
+}
+
+.animate-orbit-slow {
+  animation: orbit-cw 120s linear infinite;
+}
+
+.animate-orbit-ccw-slow {
+  animation: orbit-ccw 90s linear infinite;
+}
+
+.animate-float {
+  animation: float-gentle 8s ease-in-out infinite;
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #d4af37, #f3e5ab, #ffffff, #f3e5ab, #d4af37);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: subtle-shimmer 6s linear infinite;
+}
+
+/* Space Background Structure */
+.luminous-bg {
+  background: 
+    radial-gradient(circle at 50% -10%, rgba(30, 41, 120, 0.25) 0%, transparent 60%),
+    radial-gradient(circle at 10% 30%, rgba(13, 20, 50, 0.45) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(9, 13, 33, 0.5) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(4, 5, 12, 0.8) 0%, #030407 100%);
+}
+
+.gold-glow {
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+}
+
+.gold-glow-intense {
+  box-shadow: 0 0 50px rgba(212, 175, 55, 0.35);
+  text-shadow: 0 0 10px rgba(212,175,55,0.4);
+}
+
+/* Refined Markdown Formatting for Readings */
+.markdown-body h1 { 
+  @apply text-3xl font-serif mb-6 mt-8 text-accent font-semibold tracking-wider border-b border-white/5 pb-2 text-center capitalize;
+}
+.markdown-body h2 { 
+  @apply text-2xl font-serif mb-4 mt-8 text-accent-soft/95 font-medium tracking-wide flex items-center gap-2;
+}
+.markdown-body h3 { 
+  @apply text-lg font-serif mb-3 mt-6 text-accent-soft/80 font-medium;
+}
+.markdown-body p { 
+  @apply mb-4 leading-relaxed opacity-95 font-light text-[1rem] text-slate-100 mt-2; 
+}
+.markdown-body ul { 
+  @apply list-none list-outside pl-0 mb-6 mt-2 space-y-3 font-light; 
+}
+.markdown-body li {
+  @apply relative pl-6 text-sm text-slate-200 leading-relaxed;
+}
+.markdown-body li::before {
+  content: "✦";
+  @apply absolute left-0 text-accent text-xs opacity-75 top-[1px];
+}
+.markdown-body strong { 
+  @apply text-accent font-semibold px-1 rounded bg-accent/5 border border-accent/10 font-medium; 
+}
+.markdown-body blockquote { 
+  @apply border-l-2 border-accent bg-accent/5 px-6 py-4 italic my-6 rounded-r-xl text-accent-soft text-sm leading-relaxed; 
+}
+.markdown-body hr {
+  @apply my-8 border-t border-dashed border-white/10;
+}
+.markdown-body table {
+  @apply w-full text-left text-xs border-collapse mt-4 mb-6 bg-black/40 rounded-xl overflow-hidden border border-white/5;
+}
+.markdown-body th {
+  @apply bg-accent/10 text-accent font-serif font-semibold tracking-widest uppercase p-3 border-b border-white/5;
+}
+.markdown-body td {
+  @apply p-3 border-b border-white/5 text-white/85 font-sans;
+}
+.markdown-body tr:last-child td {
+  @apply border-none;
+}
+
+/* Beautiful Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(3, 5, 8, 0.95);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.2);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.45);
+}
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }

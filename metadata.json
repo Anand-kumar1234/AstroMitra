@@ -1,0 +1,10 @@
+{
+  "name": "Celestial Guide",
+  "description": "An expert Vedic and Western astrology companion providing personalized readings, horoscopes, and birth chart insights.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
