@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Compass, Sparkles, Orbit, Gem, Info, Sun, Moon, Zap, Waves, Flame, Globe } from "lucide-react";
 
@@ -29,7 +29,17 @@ const MANDALA_SIGNS = [
 
 export default function ZodiacMandala() {
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const currentSign = MANDALA_SIGNS[selectedIdx];
+
+  useEffect(() => {
+    const checkMobileWidth = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobileWidth();
+    window.addEventListener("resize", checkMobileWidth);
+    return () => window.removeEventListener("resize", checkMobileWidth);
+  }, []);
 
   const getElementIcon = (element: string) => {
     if (element.includes("Fire") || element.includes("Agni")) return <Flame className="text-red-400 w-4 h-4" />;
@@ -62,8 +72,8 @@ export default function ZodiacMandala() {
           <div className="relative w-64 h-64 md:w-72 md:h-72 rounded-full border border-white/5 flex items-center justify-center bg-black/15 shadow-[inset_0_0_40px_rgba(0,0,0,0.5)]">
             
             {/* Spinning background planetary circles */}
-            <div className="absolute inset-4 rounded-full border border-dashed border-accent/10 pointer-events-none animate-orbit-slow" />
-            <div className="absolute inset-12 rounded-full border border-dotted border-white/5 pointer-events-none animate-orbit-ccw-slow" />
+            <div className={`absolute inset-4 rounded-full border border-dashed border-accent/10 pointer-events-none ${isMobile ? "" : "animate-orbit-slow"}`} />
+            <div className={`absolute inset-12 rounded-full border border-dotted border-white/5 pointer-events-none ${isMobile ? "" : "animate-orbit-ccw-slow"}`} />
             
             {/* Celestial center sun disk */}
             <div className="absolute w-16 h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-accent/25 via-accent/5 to-transparent border border-accent/20 flex flex-col items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.08)] pointer-events-none z-10">
