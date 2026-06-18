@@ -45,8 +45,51 @@ export default function App() {
   const [showProfileSetup, setShowProfileSetup] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   
+  // PWA Native Installer states & event capture hooks
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(() => !localStorage.getItem("pwa_dismissed"));
+  
   // History manager state
   const [historyList, setHistoryList] = useState<SavedConsultation[]>([]);
+
+  // Capture standard browser beforeinstallprompt and detect Safari iOS
+  useEffect(() => {
+    const handleBeforePrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforePrompt);
+
+    // Detect iOS client wrappers
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isAppleiOS = /iphone|ipad|ipod/.test(userAgent);
+    
+    // Check if already launched in standalone mode
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone;
+    
+    setIsIOS(isAppleiOS && !isStandalone);
+    if (isStandalone) {
+      setIsInstallable(false);
+    }
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforePrompt);
+    };
+  }, []);
+
+  const handlePWAInstall = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") {
+      setIsInstallable(false);
+    }
+    setDeferredPrompt(null);
+  };
 
   // Load user and local history on mount
   useEffect(() => {
@@ -291,6 +334,61 @@ export default function App() {
       </header>
 
       <main className="container mx-auto px-4 relative z-10 max-w-6xl">
+        {/* Elegant Cosmic PWA Install Banner */}
+        <AnimatePresence>
+          {showInstallPrompt && (isInstallable || isIOS) && (
+            <motion.div
+              initial={{ opacity: 0, y: -15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              className="w-full max-w-2xl mx-auto mb-8 relative"
+            >
+              <div className="glass-accent rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-5 border-accent/25 bg-black/60 shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
+                <div className="flex items-center gap-4 text-left">
+                  <div className="w-11 h-11 rounded-2xl bg-accent/10 border border-accent/25 flex items-center justify-center shrink-0">
+                    <Sparkles className="text-accent animate-pulse" size={20} />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-serif font-bold text-accent-soft uppercase tracking-widest">
+                      Celestial Guide Mobile App Apnaayein
+                    </h4>
+                    <p className="text-[10px] text-white/70 font-light mt-1">
+                      {isIOS 
+                        ? "Safari se instantly Home Screen par add karen aur bina lag super smooth chalayein!" 
+                        : "Niche install circular trigger dabayein. Mobile browser lag free ho jayega!"}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto justify-end">
+                  {isIOS ? (
+                    <div className="text-[9px] font-semibold text-accent/90 border border-accent/15 px-3.5 py-2 rounded-xl bg-accent/5 max-w-[210px] text-center leading-relaxed">
+                      Dabayein <span className="underline font-bold text-white">Share 📤</span> iske baad <span className="underline font-bold text-white">Add to Home Screen (+)</span>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handlePWAInstall}
+                      className="px-5 py-2 text-[10px] font-bold text-bg-dark bg-gradient-to-r from-accent to-accent-soft hover:shadow-[0_0_20px_rgba(212,175,55,0.45)] transition-all duration-300 rounded-xl cursor-pointer uppercase tracking-wider font-sans whitespace-nowrap"
+                    >
+                      INSTALL KAREN
+                    </button>
+                  )}
+                  <button
+                    onClick={() => {
+                      setShowInstallPrompt(false);
+                      localStorage.setItem("pwa_dismissed", "true");
+                    }}
+                    className="p-1.5 hover:bg-white/5 rounded-xl text-white/30 hover:text-white/70 transition-colors cursor-pointer"
+                    title="Dismiss"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <AnimatePresence mode="wait">
           {!user ? (
             <motion.div
